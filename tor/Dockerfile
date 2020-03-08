@@ -19,3 +19,5 @@ RUN addgroup -g 1001 -S tor && \
 USER tor
 
 ENTRYPOINT ["/usr/local/bin/tor", "-f", "/usr/local/etc/tor/torrc"]
+
+skdjvn

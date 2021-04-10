@@ -1,0 +1,4 @@
+#!/bin/sh
+set -euxo pipefail
+
+/usr/bin/rtorrent ./*.torrent

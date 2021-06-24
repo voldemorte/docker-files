@@ -1,9 +1,9 @@
-FROM alpine:3.11
+FROM alpine:3.14
 
-ENV DEFAULT_TERRAFORM_VERSION=0.12.23
-ENV DEFAULT_TERRAGRUNT_VERSION=0.23.8
-ENV DEFAULT_TFLINT_VERSION=0.15.4
-ENV KUBECTL_VERSION=1.18.1
+ENV DEFAULT_TERRAFORM_VERSION=1.0.0
+ENV DEFAULT_TERRAGRUNT_VERSION=0.31.0
+ENV DEFAULT_TFLINT_VERSION=0.29.1
+ENV KUBECTL_VERSION=1.21.2
 
 RUN apk update && \
     apk add curl wget git && \
@@ -27,7 +27,7 @@ RUN curl -s -Lo tflint.zip https://github.com/terraform-linters/tflint/releases/
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
     chmod +x kubectl && \
     mv kubectl /usr/local/bin/ && \
-    curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.15.10/2020-02-22/bin/linux/amd64/aws-iam-authenticator && \
+    curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/aws-iam-authenticator && \
     chmod +x aws-iam-authenticator && \
     mv aws-iam-authenticator /usr/local/bin/
 

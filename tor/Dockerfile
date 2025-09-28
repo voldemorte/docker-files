@@ -1,14 +1,16 @@
-FROM alpine:3.11
+FROM alpine:3.22
+
+ENV TOR_VERSION=0.4.8.9
 
 RUN addgroup -g 1001 -S tor && \
     adduser -D -u 1001 -s /sbin/nologin -G tor -g tor tor && \
     apk update && \
     apk add --no-cache --virtual .builddeps gcc g++ make wget && \
     apk add libevent-dev openssl-dev zlib-dev && \
-    wget -qO /srv/tor.tar.gz https://dist.torproject.org/tor-0.4.2.6.tar.gz && \
+    wget -qO /srv/tor.tar.gz https://dist.torproject.org/tor-${TOR_VERSION}.tar.gz && \
     cd /srv/ && \
     tar xzf tor.tar.gz && \
-    cd tor-0.4.2.6 && \
+    cd tor-${TOR_VERSION} && \
     ./configure && make && \
     make install && \
     apk del --no-network .builddeps && \

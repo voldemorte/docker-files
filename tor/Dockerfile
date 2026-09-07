@@ -1,5 +1,5 @@
 # ---------- Build stage ----------
-FROM alpine:3.22 AS build
+FROM alpine:3.24 AS build
 
 ARG TOR_VERSION=0.4.9.9
 WORKDIR /src
@@ -19,11 +19,11 @@ RUN wget -q https://dist.torproject.org/tor-${TOR_VERSION}.tar.gz \
  && make install-strip
 
 # ---------- Runtime stage ----------
-FROM alpine:3.22
+FROM alpine:3.24
 
 # Runtime deps only (shared libs)
 RUN apk add --no-cache \
-      libevent openssl zlib ca-certificates
+      libevent openssl zlib ca-certificates libcap-setcap libcap
 
 # Non-root user
 RUN addgroup -g 1001 -S tor \
@@ -35,7 +35,7 @@ COPY --from=build /opt/tor/ /opt/tor/
 # Minimal config + data dir
 RUN mkdir -p /opt/tor/etc/tor /opt/tor/var/lib/tor \
  && printf "SOCKSPort 0.0.0.0:9050\nDNSPort 0.0.0.0:53\n" > /opt/tor/etc/tor/torrc \
- && chown -R tor:tor /opt/tor
+ && chown -R tor:tor /opt/tor \
  && setcap 'cap_net_bind_service=+ep' /opt/tor/bin/tor
 
 USER tor

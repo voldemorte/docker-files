@@ -1,7 +1,7 @@
 # ---------- Build stage ----------
 FROM alpine:3.22 AS build
 
-ARG TOR_VERSION=0.4.8.9
+ARG TOR_VERSION=0.4.9.9
 WORKDIR /src
 
 # Build toolchain + headers only in this stage
@@ -34,11 +34,12 @@ COPY --from=build /opt/tor/ /opt/tor/
 
 # Minimal config + data dir
 RUN mkdir -p /opt/tor/etc/tor /opt/tor/var/lib/tor \
- && printf "SOCKSPort 0.0.0.0:9050\n" > /opt/tor/etc/tor/torrc \
+ && printf "SOCKSPort 0.0.0.0:9050\nDNSPort 0.0.0.0:53\n" > /opt/tor/etc/tor/torrc \
  && chown -R tor:tor /opt/tor
+ && setcap 'cap_net_bind_service=+ep' /opt/tor/bin/tor
 
 USER tor
-EXPOSE 9050
+EXPOSE 9050 53/udp
 
 # Use the privately installed tor and explicit data dir (owned by 'tor')
 ENTRYPOINT ["/opt/tor/bin/tor", "-f", "/opt/tor/etc/tor/torrc", "--DataDirectory", "/opt/tor/var/lib/tor"]

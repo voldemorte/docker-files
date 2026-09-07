@@ -7,8 +7,9 @@ networks:
 services:
   tor:
     image: docker.io/nikhilch/tor:latest
-    expose:
+    ports:
       - "9050:9050"
+    expose:
       - "53/udp"
     networks:
       tor_net:
